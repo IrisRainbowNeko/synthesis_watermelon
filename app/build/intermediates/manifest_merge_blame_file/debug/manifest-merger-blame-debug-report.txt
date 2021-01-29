@@ -1,0 +1,43 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.hcdxg.mygame"
+4    android:versionCode="1"
+5    android:versionName="1.1" >
+6
+7    <uses-sdk
+7-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:7:5-47
+8        android:minSdkVersion="14"
+8-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:7:5-47
+9        android:targetSdkVersion="21" />
+9-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:7:15-44
+10
+11    <application
+11-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:9:5-22:19
+12        android:debuggable="true"
+13        android:icon="@drawable/ic_launcher"
+13-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:10:9-45
+14        android:label="@string/app_name"
+14-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:11:9-41
+15        android:testOnly="true"
+16        android:theme="@style/AppTheme" >
+16-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:12:9-40
+17        <activity
+17-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:13:9-21:20
+18            android:name="com.hcdxg.mygame.MainActivity"
+18-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:15:13-41
+19            android:label="@string/app_name" >
+19-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:14:13-45
+20            <intent-filter>
+20-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:16:13-20:29
+21                <action android:name="android.intent.action.MAIN" />
+21-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:17:17-69
+21-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:17:25-66
+22
+23                <category android:name="android.intent.category.LAUNCHER" />
+23-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:19:17-77
+23-->E:\Android\make_watermelon\app\src\main\AndroidManifest.xml:19:27-74
+24            </intent-filter>
+25        </activity>
+26    </application>
+27
+28</manifest>

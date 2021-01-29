@@ -1,0 +1,61 @@
+{
+    "logs": [
+        {
+            "outputFile": "E:\\Android\\make_watermelon\\app\\build\\intermediates\\res\\merged\\debug\\values_values.arsc.flat",
+            "map": [
+                {
+                    "source": "E:\\Android\\make_watermelon\\app\\src\\main\\res\\values\\styles.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "3",
+                        "endColumns": "9",
+                        "endOffsets": "129"
+                    },
+                    "to": {
+                        "startLines": "4",
+                        "startColumns": "4",
+                        "startOffsets": "159",
+                        "endLines": "5",
+                        "endColumns": "9",
+                        "endOffsets": "233"
+                    }
+                },
+                {
+                    "source": "E:\\Android\\make_watermelon\\app\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "4,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "117,56",
+                        "endColumns": "42,60",
+                        "endOffsets": "155,112"
+                    },
+                    "to": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,98",
+                        "endColumns": "42,60",
+                        "endOffsets": "93,154"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "E:\\Android\\make_watermelon\\app\\build\\intermediates\\res\\merged\\debug\\values-v21_values-v21.arsc.flat",
+            "map": [
+                {
+                    "source": "E:\\Android\\make_watermelon\\app\\src\\main\\res\\values-v21\\styles.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "3",
+                        "endColumns": "9",
+                        "endOffsets": "133"
+                    }
+                }
+            ]
+        }
+    ]
+}
