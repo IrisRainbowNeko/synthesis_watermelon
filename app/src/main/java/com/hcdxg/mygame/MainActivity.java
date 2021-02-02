@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity
 	public static SharedPreferences fs;
 	public static boolean creat;
 	public static String data_dir;
+	public static String exp_dir_name="synthesis";
 
 	public static MainActivity ma;
 

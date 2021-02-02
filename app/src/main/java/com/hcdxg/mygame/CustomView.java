@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.view.KeyEvent;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.uxyq7e.test.Button;
@@ -92,8 +93,20 @@ public class CustomView extends GameView {
             @Override
             public boolean up()
             {
-                exportBlocks("test");
-                Toast.makeText(MainActivity.ma,"导出完成",Toast.LENGTH_SHORT).show();
+                File save_dir=new File(Screen.FILE_SD, MainActivity.exp_dir_name);
+                if(!save_dir.exists()) save_dir.mkdirs();
+
+                final EditText et=new EditText(MainActivity.ma);
+                //et.setEms(9);
+                new AlertDialog.Builder(MainActivity.ma).setTitle("输入名称")
+                        .setIcon(R.drawable.ic_launcher)
+                        .setView(et).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        exportBlocks(et.getText().toString());
+                        Toast.makeText(MainActivity.ma,"导出至:手机储存/"+MainActivity.exp_dir_name+"/"+et.getText().toString()+".zip",Toast.LENGTH_SHORT).show();
+                    }
+                }).setNegativeButton("取消",null).show();
                 return true;
             }
         });
@@ -196,7 +209,7 @@ public class CustomView extends GameView {
 
             @Override
             public boolean up() {
-                Screen.sp.play(((BlockItem)gv.user_data).sound, 1, 1, 1, 0, 1);
+                sp.play(((BlockItem)gv.user_data).sound, 1, 1, 1, 0, 1);
                 return true;
             }
         });
@@ -254,8 +267,9 @@ public class CustomView extends GameView {
 
         BlockItem bl=(BlockItem)gv.user_data;
         sp.unload(bl.sound);
-        bl.sound=Screen.sp.load(path,1);
-        bl.sound_data=readFile(new File(MainActivity.data_dir, path));
+
+        bl.sound=sp.load(path,1);
+        bl.sound_data=readFile(new File(path));
         return true;
     }
 
@@ -284,6 +298,13 @@ public class CustomView extends GameView {
         Block.load_size_rate();
         sp.release();
         sp=new SoundPool(10, AudioManager.STREAM_MUSIC,100);
+        sp.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId,
+                                       int status) {
+                System.out.println("load:"+sampleId);
+            }
+        });
         for(int i=0;i<Block.ball_size.length;i++){
             addItem(BitmapFactory.decodeFile(new File(MainActivity.data_dir,i+".png").toString()),
                     Block.ball_size[i],Block.ball_rate[i],new File(MainActivity.data_dir, i+".wav"),i);
@@ -299,7 +320,7 @@ public class CustomView extends GameView {
     public void exportBlocks(String name){
         saveChages();
         try {
-            ZipUtil.zip(MainActivity.data_dir, new File(Screen.FILE_SD, name+".zip").toString());
+            ZipUtil.zip(MainActivity.data_dir, new File(Screen.FILE_SD, MainActivity.exp_dir_name+"/"+name+".zip").toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

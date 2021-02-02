@@ -43,9 +43,9 @@ public class Game extends GameView
 		body_remove=new Vector<Body>();
 		caidan=false;
 		//addblock();
-		create(-5,810,10,2220,0,0.5f,0.3f,0,-2);
-		create(1085,810,10,2220,0,0.5f,0.3f,0,-2);
-		create(540,1925,1080,10,0,0.5f,0.3f,0,-1);
+		create(-5,810,10,2220,0,0.5f,0.1f,0,-2);
+		create(1085,810,10,2220,0,0.5f,0.1f,0,-2);
+		create(540,1925,1080,10,0,0.5f,0.1f,0,-1);
 		//Body bbo=create(540,-5,1080,10,0,0.5f,0.3f,0,-2);
 		//bbo.getFixtureList().m_filter.groupIndex=-1;
 		Button back=new Button(0,0,120,120);
@@ -195,11 +195,11 @@ public class Game extends GameView
 	public void addblock(int id, Block bpos){
 		Body bo;
 		Vec2 center=bpos.getposition_center();
-		float mass=(float)Math.pow(Block.ball_size[id]/10f,2);
+		float mass=(float)Math.pow(Block.ball_size[id]/100f,2);
 		if(id>=0)
-			bo=createc(center.x,center.y,mass,bpos.angle,createc_fix(Block.ball_size[id],mass,0.2f,0.3f,count));
+			bo=createc(center.x,center.y,mass,bpos.angle,createc_fix(Block.ball_size[id],mass,0.2f,0.1f,count));
 		else
-			bo=createc(center.x,center.y,mass,bpos.angle,createc_fix(75,mass,0.2f,0.3f,count));
+			bo=createc(center.x,center.y,mass,bpos.angle,createc_fix(75,mass,0.2f,0.1f,count));
 		Block blo=new Block(bo,id);
 		blo.setposition_center(bpos.x,bpos.y);
 		blo.id=count;
