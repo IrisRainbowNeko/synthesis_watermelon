@@ -115,7 +115,7 @@ public class Block extends Image
 		dr=(ar-r)/(time/20);
 		this.time=time;
 		body.setUserData(-1);
-		Screen.sp.play(Screen.mix.get(num),1,1,1,0,1);
+		Screen.sp.play(Screen.mix.get(num+1),1,1,1,0,1);
 	}
 
 	public static void load_size_rate(){

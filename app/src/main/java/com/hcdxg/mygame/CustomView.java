@@ -71,7 +71,6 @@ public class CustomView extends GameView {
         });
 
         for(int i=0;i<Screen.blocks.size();i++){
-
             addItem(Screen.blocks.get(i), Block.ball_size[i], Block.ball_rate[i],new File(MainActivity.data_dir, i+".wav"),i);
             //item_list.add(new BlockItem(Screen.blocks.get(i), Block.ball_size[i], readFile(new File(MainActivity.data_dir, i+".wav")),Screen.mix.get(i)));
         }

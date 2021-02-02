@@ -26,7 +26,7 @@ public class GravityView extends GameView
 				@Override
 				public void startseek()
 				{
-					// TODO: Implement this method
+
 				}
 				@Override
 				public void seeking(int index)
