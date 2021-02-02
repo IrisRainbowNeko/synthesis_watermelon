@@ -8,8 +8,9 @@ public class GravityView extends GameView
 	public GravityView(){
 		final Lable la=new Lable("设置重力",200,300,1,1);
 		la.SetwhSurround();
-		seek sk=new seek(200,400,700,50);
-		sk.setIndexDrawer(new seek.IndexDrawer(){
+		Seeker sk=new Seeker(200,450,700,50);
+		sk.setseekable(true);
+		sk.setIndexDrawer(new Seeker.IndexDrawer(){
 
 				@Override
 				public String drawindex(int index)
@@ -21,7 +22,7 @@ public class GravityView extends GameView
 		sk.setbitmap(tool.loadbitmap("bar.png"));
 		sk.setmax(35);
 		sk.setindex((int)Game.G.y-5);
-		sk.setseeklistener(new seek.Seeklistener(){
+		sk.setseeklistener(new Seeker.Seeklistener(){
 				@Override
 				public void startseek()
 				{

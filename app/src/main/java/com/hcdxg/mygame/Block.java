@@ -3,18 +3,24 @@ import com.uxyq7e.test.*;
 import org.jbox2d.dynamics.*;
 import org.jbox2d.common.*;
 import android.graphics.*;
+
 import com.uxyq7e.test.tools.tool;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
 
 public class Block extends Image
 {
 	public Body body;
 	public int num,id,time,bitw,bith;
 	float r,dr,alpha;
-	boolean outof;
+	boolean outof, collisioned;
 	Paint pp=new Paint(),pai=new Paint();
 	
-	public static int[] ball_size={45,55,70,90,100,120,150,175,200,230,280,350};
-	
+	public static int[] ball_size={45,55,70,90,100};
+	public static float[] ball_rate={0.4f,0.3f,0.2f,0.1f,0};
+
 	public Block(Body body,int num){
 		this.body=body;this.num=num;
 		pp.setColor(Color.WHITE);
@@ -50,9 +56,9 @@ public class Block extends Image
 		setsize(ball_size[num]*2,ball_size[num]*2);
 		if(num<0)
 			setbitmap(Screen.fun[-num-1]);
-		else if(num<Screen.blocks.length)
+		else if(num<Screen.blocks.size())
 		{
-			setbitmap(Screen.blocks[num]);
+			setbitmap(Screen.blocks.get(num));
 			outof=false;
 		}else
 		{
@@ -109,6 +115,34 @@ public class Block extends Image
 		dr=(ar-r)/(time/20);
 		this.time=time;
 		body.setUserData(-1);
-		Screen.sp.play(Screen.mix[num],1,1,1,0,1);
+		Screen.sp.play(Screen.mix.get(num),1,1,1,0,1);
 	}
+
+	public static void load_size_rate(){
+		String[] data=tool.readwbfile(new File(MainActivity.data_dir, "size.txt").toString()).split("\n");
+		String[] size_str=data[0].trim().split("[,，]");
+		String[] rate_str=data[1].trim().split("[,，]");
+		System.out.println(data[0]);
+		ball_size=tool.str2int(size_str);
+		ball_rate=tool.str2float(rate_str);
+	}
+
+	public static Vector<Bitmap> loadBlockImages(){
+		load_size_rate();
+		Vector<Bitmap> blks=new Vector<Bitmap>();
+		for(int i=0;i<ball_size.length;i++){
+			File item=new File(MainActivity.data_dir, i+".png");
+			blks.add(BitmapFactory.decodeFile(item.toString()));
+			//System.out.println(item.toString()+","+ blks[i]);
+		}
+
+		return blks;
+	}
+	public static Vector<Integer> loadMixSounds(Screen screen) throws IOException {
+		Vector<Integer> mix=new Vector<Integer>();
+		for(int i=0;i<ball_size.length;i++)
+			mix.add(screen.sp.load(new File(MainActivity.data_dir,i+".wav").toString(),1));
+		return mix;
+	}
+
 }

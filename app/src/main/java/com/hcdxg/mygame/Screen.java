@@ -7,49 +7,70 @@ import com.uxyq7e.test.tools.BitmapRegion;
 import com.uxyq7e.test.tools.tool;
 import android.media.*;
 import java.io.*;
+import java.util.Vector;
+
 import android.util.*;
+import android.view.inputmethod.InputMethodManager;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 public class Screen extends Screen7e
 {
-	public static Bitmap[] blocks,numbers,fun;
+	public static Bitmap[] numbers,fun;
+	public static Vector<Bitmap> blocks=new Vector<Bitmap>();
 	public static GameView gv;
 	public static Game ge;
 	public static MainView mv;
+	public static CustomView cv;
 	public static GravityView grav;
-	public static Explain exp;
 	public static Lost lost;
-	public static Win win;
-	public static Bitmap out,teji,bg;
+	public static Bitmap out,teji,bg,play,change;
 	public static SoundPool sp;
 	public static int caidan;
-	public static int[] mix=new int[4];
+	public static Vector<Integer> mix=new Vector<Integer>();
+
+	public static Screen scr;
 
 	public Screen(Context c){
 		super(c);
-		blocks=BitmapRegion.splitwh(tool.loadbitmap("blocks.png"),150,150);
+		scr=this;
 		fun=BitmapRegion.splitwh(tool.loadbitmap("fh.png"),150,150);
-		numbers=BitmapRegion.split(tool.big(tool.loadbitmap("num.png"),0.5f,0.5f),11,1);
+		numbers=BitmapRegion.split(tool.Scale(tool.loadbitmap("num.png"),0.5f,0.5f),11,1);
 		out=tool.loadbitmap("else.png");
 		teji=tool.loadbitmap("teji.png");
-		bg=tool.loadbitmap("indi.png");
-		sp=new SoundPool(6,AudioManager.STREAM_MUSIC,100);
-		try
-		{
-			mix[0]=sp.load(am.openFd("sb.wav"),1);
-			mix[1]=sp.load(am.openFd("hyjs.wav"),1);
-			mix[2]=sp.load(am.openFd("rock.wav"),1);
-			mix[3]=sp.load(am.openFd("ding.wav"),1);
-			caidan=sp.load(am.openFd("caidan.wav"),1);
-		}catch (IOException e){}
+		play=tool.loadbitmap("play.png");
+		change=tool.loadbitmap("change.png");
+
+		File bg_file=new File(MainActivity.data_dir, "bg.png");
+		if(bg_file.exists()){
+			bg=BitmapFactory.decodeFile(bg_file.toString());
+		} else {
+			bg=tool.loadbitmap("indi.png");
+		}
+
+		loadBlockData();
+
 		mv=new MainView();
 		ge=new Game();
-		exp=new Explain();
+		cv=new CustomView();
 		lost=new Lost();
-		win=new Win();
 		grav=new GravityView();
 		gv=mv;
-		
+
 	}
+
+	public void loadBlockData(){
+        blocks=Block.loadBlockImages();
+        sp=new SoundPool(6,AudioManager.STREAM_MUSIC,100);
+        try
+        {
+            mix.addAll(Block.loadMixSounds(this));
+            caidan=sp.load(am.openFd("caidan.wav"),1);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
 	@Override
 	public void surfaceCreated(SurfaceHolder p1)
 	{
@@ -76,6 +97,7 @@ public class Screen extends Screen7e
 	public boolean onKeyDown(int keyCode, KeyEvent event)
 	{
 		return gv.onKeyDown(keyCode);
+		//return true;
 	}
 
 	@Override
@@ -84,5 +106,4 @@ public class Screen extends Screen7e
 		gv.poi();
 		super.poi();
 	}
-	
 }

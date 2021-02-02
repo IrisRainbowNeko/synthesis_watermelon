@@ -16,17 +16,17 @@ public class MyDialog extends Dialog
 	}
 
 	@Override
-	public void setltext(String text)
+	public void setLtext(String text)
 	{
-		super.setltext(text);
-		setlbitmap(bmp);
+		super.setLtext(text);
+		setLbitmap(bmp);
 	}
 
 	@Override
-	public void setrtext(String text)
+	public void setRtext(String text)
 	{
-		super.setrtext(text);
-		setrbitmap(bmp);
+		super.setRtext(text);
+		setRbitmap(bmp);
 	}
 	
 }

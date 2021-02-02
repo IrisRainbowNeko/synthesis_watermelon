@@ -12,9 +12,14 @@ public class MainView extends GameView
 {
 	MyDialog md;
 	boolean diatc;
+    Image title_final;
+
 	public MainView(){
-		Image title=new Image(286,300,507,130);
+	    Image title=new Image(286,300,361,130);
 		title.setbitmap(tool.loadbitmap("title.png"));
+        title_final=new Image(title.getright()+20,305,120,120);
+        title_final.setbitmap(Screen.blocks.lastElement());
+
 		Button ks=new Button();
 		ks.settextsize(70);
 		ks.settext("开始游戏");
@@ -135,6 +140,7 @@ public class MainView extends GameView
 				}
 			});
 		addview(title);
+		addview(title_final);
 		addview(ks);
 		addview(sm);
 		addview(tc);

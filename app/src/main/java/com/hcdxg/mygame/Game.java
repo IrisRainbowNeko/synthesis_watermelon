@@ -17,7 +17,7 @@ public class Game extends GameView
 	World world;
 	public static Vec2 G=new Vec2(0,10);
 	AABB aabb=new AABB();
-	public final static float bl=30;
+	public final static float bl=30, top_line=300;
 	public static Vector<Block> blocklist=new Vector<Block>();
 	public static Vector<Body> body_remove=new Vector<Body>();
 	int count=0;
@@ -28,6 +28,8 @@ public class Game extends GameView
 	public static Lable point_la;
 	Path firstpath;
 	Paint pa;
+	public int lost_count=0;
+	public boolean danger;
 	
 	Vector<Block> blk_plus_list=new Vector<Block>();
 	Block blk_hold;
@@ -78,7 +80,10 @@ public class Game extends GameView
 		firstpath.lineTo(570,1000);
 		firstpath.close();
 		pa=new Paint();
-		pa.setTextSize(50);
+        pa.setStyle(Paint.Style.STROKE);
+        pa.setStrokeWidth(5);
+        pa.setColor(Color.parseColor("#ffcc66"));
+        pa.setPathEffect(new DashPathEffect(new float[]{30, 5}, 0));
 	}
 	public static void update_point(int p){
 		point+=p;
@@ -95,6 +100,10 @@ public class Game extends GameView
 		if(blk_hold!=null){
 			blk_hold.Draw(canvas);
 		}
+
+		if(danger){
+		    canvas.drawLine(0,top_line,1080,top_line, pa);
+        }
 		
 		super.Draw(canvas);
 		/*if(firstopen){
@@ -111,37 +120,38 @@ public class Game extends GameView
 	{
 		//try{
 		world.step(1/50f,10,8);
-		if(blocklist.size()>77){
+		/*if(blocklist.size()>77){
 			Screen.lost=new Lost();
 			Screen.gv=Screen.lost;
 			return;
-		}
+		}*/
 		for(int i=0;i<blocklist.size();i++){
 			if(blocklist.get(i).poi_b())
 				blocklist.removeElementAt(i--);
 		}
+
+		//检查是否失败
+		float top_y=1e8f;
 		for(int i=0;i<blocklist.size();i++){
-			if(blocklist.get(i).num>=63){
-				Screen.win=new Win();
-				Screen.gv=Screen.win;
-				return;
-			}
-			/*if(!caidan&&blocklist.get(i).num>=12){
-				caidan=true;
-				Screen.sp.play(Screen.caidan,1,1,1,0,1);
-				for(int u=0;u<4;u++){
-					Body bo;
-					bo=createc(100+880*(u/3f),300,75,5,0.1f,0.3f,0,count);
-					Block blo=new Block(bo,-u-1);
-					blo.setposition_center(100+880*(u/3f),300);
-					blo.id=count;
-					blo.body.getFixtureList().m_filter.groupIndex=1;
-					count++;
-					blocklist.add(blo);
-				}
-				break;
-			}*/
+			Block blk=blocklist.get(i);
+			if(blk.collisioned)
+			    top_y=Math.min(blk.y- Block.ball_size[blk.num], top_y);
 		}
+
+		danger=(top_y<=top_line+150);
+
+		if(top_y<=top_line){
+			if(lost_count>50*4){
+				Screen.lost=new Lost();
+				Screen.gv=Screen.lost;
+				return;
+			} else {
+				lost_count++;
+			}
+		} else {
+			lost_count=0;
+		}
+
 		if(add){
 			addblock();
 			add=false;
@@ -168,16 +178,14 @@ public class Game extends GameView
 	}
 	
 	public int geneType(){
-		double pid=Math.random()*100;
-		int id=0;
-		if(pid<0)id=-1;
-		else if(pid<0)id=-2;
-		else if(pid<0)id=-3;
-		else if(pid<0)id=-4;
-		else if(pid<80)id=0;
-		else if(pid<98)id=1;
-		else id=2;
-		return id;
+		double pid=Math.random();
+		float sum=0;
+		for(int i=0;i<Block.ball_rate.length;i++){
+            sum+=Block.ball_rate[i];
+            if(pid<sum)
+                return i;
+        }
+		return 0;
 	}
 	
 	public void addblock(){
@@ -186,7 +194,7 @@ public class Game extends GameView
 	}
 	public void addblock(int id, Block bpos){
 		Body bo;
-		com.uxyq7e.test.tools.Vec2 center=bpos.getposition_center();
+		Vec2 center=bpos.getposition_center();
 		float mass=(float)Math.pow(Block.ball_size[id]/10f,2);
 		if(id>=0)
 			bo=createc(center.x,center.y,mass,bpos.angle,createc_fix(Block.ball_size[id],mass,0.2f,0.3f,count));
@@ -251,28 +259,25 @@ public class Game extends GameView
 		if(event.getAction()==MotionEvent.ACTION_DOWN){
 			X=getX(event);
 			Y=getY(event);
-			blk_hold=new Block(null, geneType());
-			blk_hold.setposition_center(X,100);
-			blk_hold.setangle((float)Math.random()*360);
+			if(blocklist.isEmpty() || blocklist.lastElement().collisioned) {
+                blk_hold = new Block(null, geneType());
+                blk_hold.setposition_center(X, 100);
+                blk_hold.setangle((float) Math.random() * 360);
+            }
 		}
 		if(event.getAction()==MotionEvent.ACTION_MOVE){
 			float xx=getX(event);
 			float yy=getY(event);
-			blk_hold.setposition_center(xx,100);
+			if(blk_hold!=null)
+			    blk_hold.setposition_center(xx,100);
 		}
 		if(event.getAction()==MotionEvent.ACTION_UP){
 			float xx=getX(event);
 			float yy=getY(event);
-			blk_hold.setposition_center(xx,100);
-			add=true;
-			
-			/*if(blocklist.lastElement().y<=30)dy=Math.max(0,dy);
-			Body bb=blocklist.lastElement().body;
-			bb.applyForce(new Vec2(dx*bb.getMass()*2,dy*bb.getMass()*2),bb.getWorldCenter());
-			if(firstopen){
-				firstopen=false;
-				MainActivity.fs.edit().putBoolean("first",false).commit();
-			}*/
+            if(blk_hold!=null) {
+                blk_hold.setposition_center(xx, 100);
+                add = true;
+            }
 		}
 		return super.touch(event);
 	}
@@ -292,19 +297,29 @@ public class Game extends GameView
 		@Override
 		public void beginContact(Contact p1)
 		{
-			Block fkk=blocklist.lastElement();
+			//Block fkk=blocklist.lastElement();
 			int A=(int)p1.getFixtureA().getBody().getFixtureList().getUserData();
 			int B=(int)p1.getFixtureB().getBody().getFixtureList().getUserData();
-			/*if((p1.getFixtureA().getBody()==fkk.body||p1.getFixtureB().getBody()==fkk.body)&&(A!=-2&&B!=-2))
-			{
-				add=true;
-			}*/
+
+            Block blA=null,blB=null;
+
+			if(A>=0) {
+                blA = findblock(blocklist, A);
+                blA.collisioned = true;
+            }
+
+            if(B>=0) {
+                blB = findblock(blocklist, B);
+                blB.collisioned = true;
+            }
+
 			if(A>=0&&B>=0)
 			{
 				if(body_remove.indexOf(p1.getFixtureA().getBody())==-1&&
 					body_remove.indexOf(p1.getFixtureB().getBody())==-1){
 						
-					Block blA=findblock(blocklist,A),blB=findblock(blocklist,B);
+					//=findblock(blocklist,A),blB=findblock(blocklist,B);
+
 					if(blA.time!=0||blB.time!=0)return;
 					if(blA.num<0&&blB.num<0)return;
 					if(blA.num<0)
@@ -314,13 +329,13 @@ public class Game extends GameView
 					}else if(blB.num<0){
 						blB.scaleto(106,150);
 						blA.change(blB.num);
-					}else if(blA.num==blB.num){
+					}else if(blA.num<Block.ball_size.length-1 && blA.num==blB.num){
 						 blB.scaleto(106,150);
 						 /*int idA=blA.body.getFixtureList().getUserData();
 						 Fixture ft=blA.body.getFixtureList();
 						 System.out.println(ft);
 						 blA.body.destroyFixture(ft);
-						 
+
 						 System.out.println(Block.ball_size[blA.num+1]);
 						 ft=blA.body.createFixture(createc_fix(Block.ball_size[blA.num+1],5,0.1f,0.3f,idA));
 						 System.out.println(ft);
